@@ -29,7 +29,7 @@ const burgerIngredient = (props) => {
       break;
     default:
   }
-  return {ingredient};
+  return ingredient;
 }
 
 burgerIngredient.propTypes = {
