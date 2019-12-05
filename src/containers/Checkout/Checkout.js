@@ -9,6 +9,17 @@ class Checkout extends Component {
       bacon: 1
     }
   }
+  componentDidMount(){
+    const query = new URLSearchParams(this.props.location.search);
+    const ingredients = {};
+    for(let entry of query.entries()){
+      ingredients[entry[0]] = +entry[1];
+    }
+    this.setState({
+      ingredients: ingredients
+    });
+  }
+
   checkoutCancelHandler = () => {
     this.props.history.goBack();
   }
