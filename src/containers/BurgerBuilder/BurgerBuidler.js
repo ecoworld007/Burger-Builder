@@ -79,15 +79,14 @@ class BurgerBuilder extends Component{
     });
   }
 
-  continuePurchaseHandler = (ings, price) => {
-    let queryParams = [];
-    for(let key of Object.keys(ings)){
-      queryParams.push(encodeURIComponent(key)+'='+encodeURIComponent(ings[key]));
-    }
-    queryParams.push('totalPrice='+encodeURIComponent(price));
+  continuePurchaseHandler = () => {
+    // let queryParams = [];
+    // for(let key of Object.keys(ings)){
+    //   queryParams.push(encodeURIComponent(key)+'='+encodeURIComponent(ings[key]));
+    // }
+    // queryParams.push('totalPrice='+encodeURIComponent(price));
     this.props.history.push({
       pathname: '/checkout',
-      search: '?' + queryParams.join('&')
     });
   }
 
@@ -112,7 +111,7 @@ class BurgerBuilder extends Component{
           disabled={!this.updatePurchaseState(this.props.ings)}
           purchased={this.purchaseHandler}/>
       </Aux>)
-      orderSummary = <OrderSummary ingredients={this.props.ings} totalPrice={this.props.price.toFixed(2)} cancelClick={this.cancelPurchaseHandler} continueClick={() => this.continuePurchaseHandler(this.props.ings, this.props.price)}/>;
+      orderSummary = <OrderSummary ingredients={this.props.ings} totalPrice={this.props.price.toFixed(2)} cancelClick={this.cancelPurchaseHandler} continueClick={this.continuePurchaseHandler}/>;
     }
     if(this.state.loading){
       orderSummary = <Spinner/>
