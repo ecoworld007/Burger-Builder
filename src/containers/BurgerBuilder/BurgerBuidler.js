@@ -18,19 +18,10 @@ import * as burgerBuilderActions from '../../store/actions/';
 // }
 class BurgerBuilder extends Component{
   state = {
-    purchasing: false,
-    loading: false,
-    error: false
+    purchasing: false
   }
   componentDidMount(){
-    // axios.get('https://react-my-burger-64336.firebaseio.com/ingredients.json')
-    //   .then(response => {
-    //     this.setState({
-    //       ingredients: response.data
-    //     });
-    //   }).catch(error => this.setState({
-    //     error: true
-    //   }));
+    this.props.onInitIngredients();
   }
   updatePurchaseState(ingredients){
     const sumOfIngredients =Object.keys(ingredients).map(key => {
@@ -98,7 +89,7 @@ class BurgerBuilder extends Component{
       disabledInfo[key] = disabledInfo[key]<=0;
     }
     let orderSummary = null;
-    let burger = this.state.error ? <div>Ingredients can't be loaded</div> : <Spinner/>;
+    let burger = this.props.error ? <div>Ingredients can't be loaded</div> : <Spinner/>;
     if(this.props.ings){
       burger = (<Aux>
         <Burger ingredients={this.props.ings}/>
@@ -112,9 +103,6 @@ class BurgerBuilder extends Component{
           purchased={this.purchaseHandler}/>
       </Aux>)
       orderSummary = <OrderSummary ingredients={this.props.ings} totalPrice={this.props.price.toFixed(2)} cancelClick={this.cancelPurchaseHandler} continueClick={this.continuePurchaseHandler}/>;
-    }
-    if(this.state.loading){
-      orderSummary = <Spinner/>
     }
     return (
       <Aux>
@@ -130,14 +118,16 @@ class BurgerBuilder extends Component{
 const mapStateToProps = (state) => {
   return {
     ings: state.ingredients,
-    price: state.totalPrice
+    price: state.totalPrice,
+    error: state.error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     onAddIngredient: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-    onRemoveIngredient: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
+    onRemoveIngredient: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
   }
 }
 
