@@ -4,7 +4,7 @@ import Button from '../../components/UI/Button/Button';
 import classes from './Auth.module.css';
 import {connect} from 'react-redux';
 import * as actions from '../../store/actions/';
-
+import Spinner from '../../components/UI/Spinner/Spinner';
 class Auth extends Component {
   state = {
     controls : {
@@ -36,7 +36,8 @@ class Auth extends Component {
         valid: false,
         touched: false
       },
-    }
+    },
+    isSignUp: true
   }
 
   onFormChangeHandler = (event, inputIdentifier) => {
@@ -49,6 +50,14 @@ class Auth extends Component {
           value: event.target.value,
           valid: this.checkIsValid(event.target.value, this.state.controls[inputIdentifier].validation)
         }
+      }
+    });
+  }
+
+  switchAuthHandler = () => {
+    this.setState(preState => {
+      return {
+        isSignUp: !this.state.isSignUp
       }
     });
   }
@@ -80,7 +89,7 @@ class Auth extends Component {
 
   authSubmitHandler = (event) => {
     event.preventDefault();
-    this.props.onAuthSubmit(this.state.controls.email.value, this.state.controls.password.value);
+    this.props.onAuthSubmit(this.state.controls.email.value, this.state.controls.password.value, this.state.isSignUp);
   }
   render() {
     const formElements = [];
@@ -101,21 +110,37 @@ class Auth extends Component {
           changeHandler={(event)=>this.onFormChangeHandler(event, formElement.id)}/>
       )
     });
-    return (
-      <div className={classes.Auth}>
-        <form onSubmit={this.authSubmitHandler}>
+    let form = (
+      <form onSubmit={this.authSubmitHandler}>
           {formInputs}
           <Button btnType='Success'>Sumit</Button>
-        </form>
+      </form>
+    );
+    if(this.props.loading){
+      form = <Spinner/>;
+    }
+    return (
+      <div className={classes.Auth}>
+        {this.props.error ? this.props.error.response.data.error.message : null}
+        {form}
+        <Button clicked={this.switchAuthHandler} btnType='Danger'>Switch to {this.state.isSignUp ? 'Singin':'Singup'}</Button>
       </div>
     );
   }
 }
 
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAuthSubmit: (email, password) => dispatch(actions.auth(email, password))
+    onAuthSubmit: (email, password, isSignUp) => dispatch(actions.auth(email, password, isSignUp))
   }
 }
 
-export default connect(null, mapDispatchToProps)(Auth);
+const mapStateToProps = (state) => {
+  return {
+    loading: state.auth.loading,
+    error: state.auth.error
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);
