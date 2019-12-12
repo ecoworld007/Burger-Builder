@@ -9,3 +9,7 @@ export {
   onInitPurchase,
   fetchOrders
 } from './order';
+
+export {
+  auth
+} from './auth';
