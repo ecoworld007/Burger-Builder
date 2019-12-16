@@ -22,6 +22,20 @@ export const authFail = (error) => {
   }
 }
 
+export const authLogout = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT
+  }
+}
+
+export const checkExpirationTime = (expirationTime) => {
+  return dispatch => {
+    setTimeout(() => {
+      dispatch(authLogout())
+    }, expirationTime*1000);
+  }
+}
+
 export const auth = (email, password, isSignUp) => {
   let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA3PXkzn5azzrV5XvCdmz_EGjKn9kV65eo';
   if(!isSignUp){
@@ -32,6 +46,7 @@ export const auth = (email, password, isSignUp) => {
     axios.post(url, {email, password, returnSecureToken: true})
       .then(res => {
         dispatch(authSuccess(res.data.localId, res.data.idToken));
+        dispatch(checkExpirationTime(checkExpirationTime(res.data.expiresIn)))
       })
       .catch(err => {
         console.log(err.response.data.error.message)
