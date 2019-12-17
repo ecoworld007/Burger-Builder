@@ -29,10 +29,11 @@ export const authLogout = () => {
 }
 
 export const checkExpirationTime = (expirationTime) => {
+  console.log('expirationTime: ', expirationTime);
   return dispatch => {
     setTimeout(() => {
       dispatch(authLogout())
-    }, expirationTime*1000);
+    }, (expirationTime * 1000));
   }
 }
 
@@ -46,7 +47,7 @@ export const auth = (email, password, isSignUp) => {
     axios.post(url, {email, password, returnSecureToken: true})
       .then(res => {
         dispatch(authSuccess(res.data.localId, res.data.idToken));
-        dispatch(checkExpirationTime(checkExpirationTime(res.data.expiresIn)))
+        dispatch(checkExpirationTime(res.data.expiresIn));
       })
       .catch(err => {
         console.log(err.response.data.error.message)
