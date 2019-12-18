@@ -4,7 +4,7 @@ import axios from 'axios';
 export const authStart = () => {
   return {
     type: actionTypes.AUTH_START
-  }
+  };
 }
 
 export const authSuccess = (userId, token) => {
@@ -12,29 +12,35 @@ export const authSuccess = (userId, token) => {
     type: actionTypes.AUTH_SUCCESS,
     userId,
     token
-  }
+  };
 }
 
 export const authFail = (error) => {
   return {
     type: actionTypes.AUTH_FAIL,
     error: error
-  }
+  };
 }
 
 export const authLogout = () => {
   return {
     type: actionTypes.AUTH_LOGOUT
-  }
+  };
+}
+
+export const setAuthRedirectPath = (path) => {
+  return {
+    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    path: path
+  };
 }
 
 export const checkExpirationTime = (expirationTime) => {
-  console.log('expirationTime: ', expirationTime);
   return dispatch => {
     setTimeout(() => {
       dispatch(authLogout())
     }, (expirationTime * 1000));
-  }
+  };
 }
 
 export const auth = (email, password, isSignUp) => {
@@ -53,5 +59,5 @@ export const auth = (email, password, isSignUp) => {
         console.log(err.response.data.error.message)
         dispatch(authFail(err));
       });
-  }
+  };
 }
