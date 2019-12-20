@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../store/actions/';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import {Redirect} from 'react-router-dom';
-import updateObject from '../../shared/utility';
+import {updateObject, checkValidity} from '../../shared/utility';
 
 class Auth extends Component {
   state = {
@@ -54,7 +54,7 @@ class Auth extends Component {
       [inputIdentifier]: updateObject(this.state.controls[inputIdentifier], {
         touched: true,
         value: event.target.value,
-        valid: this.checkIsValid(event.target.value, this.state.controls[inputIdentifier].validation)
+        valid: checkValidity(event.target.value, this.state.controls[inputIdentifier].validation)
       })
     })
     this.setState({
@@ -68,31 +68,6 @@ class Auth extends Component {
         isSignUp: !this.state.isSignUp
       }
     });
-  }
-
-  checkIsValid(value, rules){
-    let isValid =true;
-    if(!rules){
-      return isValid;
-    }
-    if(rules.required){
-      isValid = value.trim() !== '' && isValid;
-    }
-    if(rules.minLength){
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    if(rules.maxLength){
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-    if(rules.email){
-      const reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-      isValid = reg.test(value) && isValid;
-    }
-    if(rules.numeric){
-      const reg = /^\d+$/;
-      isValid = reg.test(value) && isValid;
-    }
-    return isValid;
   }
 
   authSubmitHandler = (event) => {
