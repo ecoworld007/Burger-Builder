@@ -6,7 +6,7 @@ import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 import {connect} from 'react-redux';
 class Layout extends Component {
   state = {
-    showSideDrawer: true
+    showSideDrawer: false
   }
   closeSideDrawerHandler = () => {
     this.setState({
